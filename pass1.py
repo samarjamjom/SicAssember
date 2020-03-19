@@ -109,9 +109,11 @@ for ind, line in enumerate(sic_assembly):
                     continue
                 elif opcode[0:2] == '=X':
                     operand = line[16:35].strip()
+                    symbol_table[opcode] = hex(int(loc_ctr)).format(int(loc_ctr))
                     loc_ctr += (len(operand) - 4)/2;
                 elif opcode[0:2] == '=C':
                     operand = line[16:35].strip()
+                    symbol_table[opcode] = hex(int(loc_ctr)).format(int(loc_ctr))
                     loc_ctr += (len(operand) - 4);
                 else:
                     #set error flag
