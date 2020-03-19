@@ -32,7 +32,7 @@ operand = 0
 comment = ""
 
 #create a .text files  
-intermid_file = open("intermid.txt","w+")
+intermid_file = open("intermid.mdt","w+")
 
 #initialize a list of directives
 directives = ["START", "END", "BYTE", "WORD", "RESB", "RESW", "BASE", "LTORG"]
