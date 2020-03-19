@@ -22,8 +22,8 @@ symbol_table = {}
 opt_table = {}
 prog_name = ""
 prog_leng = 0
-loc_ctr = hex(0)
-start_add = hex(0)
+loc_ctr = 0
+start_add = 0
 
 #initialize instruction comp
 label = ""
