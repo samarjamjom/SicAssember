@@ -1,78 +1,63 @@
 Mnemonic     Opcode      
 -----------  ------     
-ADD m          18    
-ADDF m         58          
-ADDR r1,r2     90    
-AND m          40    
-CLEAR r1        4    
-COMP m         28          
-COMPF m        88         
-COMPR r1,r2    A0         
-DIV m          24    
-DIVF m         64          
-DIVR r1,r2     9C    
-FIX            C4    
-FLOAT          C0          
-HIO            F4        
-J m            3C    
-JEQ m          30    
-JGT m          34    
-JLT m          38    
-JSUB m         48    
-LDA m          00    
-LDB m          68    
-LDCH m         50    
-LDF m          70          
-LDL m          08    
-LDS m          6C    
-LDT m          74    
-LDX m          04    
-LPS m          D0        
-                     
-                     
-                     
-MUL m          20    
-MULF m         60    
-MULR r1,r2     98    
-NORM           C8          
-OR m           44    
-RD m           D8        
-                     
-RMO r1,r2      AC    
-RSUB           4C    
-SHIFTL r1,n    A4    
-                     
-                     
-SHIFTR r1,n    A8    
-                     
-                     
-                     
-                     
-SIO            F0        
-                     
-                     
-SSK m          EC        
-                     
-STA m          0C    
-STB m          78    
-STCH m         54    
-STF m          80          
-STI m          D4        
-                     
-STL m          14    
-STS m          7C    
-STSW m         E8        
-STT m          84    
-STX m          10    
-SUB m          1C    
-SUBF m         5C          
-SUBR r1,r2     94    
-SVC n          B0    
-                      
-TD m           E0        
-TIO            F8        
-TIX m          2C         
-TIXR r1        B8         
-WD m           DC        
-                     
-                     
+ADD          18    
+ADDF         58          
+ADDR         90    
+AND          40    
+CLEAR        4    
+COMP         28          
+COMPF        88         
+COMPR        A0         
+DIV          24    
+DIVF         64          
+DIVR         9C    
+FIX          C4    
+FLOAT        C0          
+HIO          F4        
+J            3C    
+JEQ          30    
+JGT          34    
+JLT          38    
+JSUB         48    
+LDA          00    
+LDB          68    
+LDCH         50    
+LDF          70          
+LDL          08    
+LDS          6C    
+LDT          74    
+LDX          04    
+LPS          D0        
+MUL          20    
+MULF         60    
+MULR         98    
+NORM         C8          
+OR           44    
+RD           D8        
+RMO          AC    
+RSUB         4C    
+SHIFTL       A4    
+SHIFTR       A8    
+SIO          F0        
+SSK          EC        
+STA          0C    
+STB          78    
+STCH         54    
+STF          80          
+STI          D4        
+STL          14    
+STS          7C    
+STSW         E8        
+STT          84    
+STX          10    
+SUB          1C    
+SUBF         5C          
+SUBR         94    
+SVC          B0    
+TD           E0        
+TIO          F8        
+TIX          2C         
+TIXR         B8         
+WD           DC        
+
+
