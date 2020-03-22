@@ -33,4 +33,3 @@ RLOOP    TD     INPUT
 EXIT     STX    LENGTH
          RSUB
 INPUT    BYTE   X'F1'
-MAXLEN   WORD   4096 
