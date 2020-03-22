@@ -22,17 +22,17 @@ symbol_table = {}
 opt_table = {}
 prog_name = ""
 prog_leng = 0
-loc_ctr = 0
 start_add = 0
 
-#initialize instruction comp
+#initialize instruction component
 label = ""
 opcode = ""
 operand = 0
 comment = ""
+counter = 0
 
 #create a .text files  
-intermid_file = open("intermid.mdt","w+")
+intermid_file = open("intermid.mdt","a+")
 
 #initialize a list of directives
 directives = ["START", "END", "BYTE", "WORD", "RESB", "RESW", "BASE", "LTORG"]
@@ -41,15 +41,20 @@ directives = ["START", "END", "BYTE", "WORD", "RESB", "RESW", "BASE", "LTORG"]
 for ind, line in enumerate(opcode_table):
     #read file from third line 
     if ind>1:
-        opt_table[line[0:11].strip()] = line[11:13].strip()
+        opt_table[line[0:11].split(' ')[0]] = line[15:18].strip()
+
 
 #read first input line
 first_line = sic_assembly[0]
 if first_line[9:15].strip() == "START":
-    prog_name = first_line[0:8].strip()
-    start_add =int(first_line[16:35].strip(), 16)
+    prog_name =  first_line[0:8].strip()
+    start_add = int(first_line[16:35].strip(),16)
     loc_ctr = start_add
-    intermid_file.write(str(hex(int(loc_ctr))) +" " +first_line)
+    #to save a fixed format for intermediate file 
+    blanks = 6-len(str((loc_ctr)))
+    #write line to intemediate file
+    intermid_file.write(hex(loc_ctr)[2:]+" "*blanks+first_line)
+    
 else:
     loc_ctr = 0
 
@@ -72,21 +77,17 @@ for ind, line in enumerate(sic_assembly):
                     break
                 #else insert [label, LOCCTR] into SYMTAB
                 else:
-                    symbol_table[label] = hex(int(loc_ctr)).format(int(loc_ctr))
+                    symbol_table[label] = hex(loc_ctr)[2:]
 
             #found is a boolean to  determine if opcode exist in opcode table
             found = 0
 
-            loc_ctr = int(loc_ctr)
-        
             #search OPTAB for OPCODE
             if opcode in opt_table:
                 #if found
                 found = 1
-
                 #add 3 {instruction length} to LOCCTR
                 loc_ctr += 3
-
 
             if found == 0 and opcode in directives:
                 if opcode == "WORD":
@@ -102,35 +103,20 @@ for ind, line in enumerate(sic_assembly):
                     operand = line[16:35].strip()
                     #find the length of constant in bytes and add it to loc_ctr
                     if operand[0] == 'X':
-                        loc_ctr += (len(operand) - 3)/2;
+                        loc_ctr += int((len(operand) - 3)/2)
                     elif operand[0] == 'C':
-                        loc_ctr += (len(operand) - 3);
-                elif opcode == "LTORG":
-                    continue
-                elif opcode[0:2] == '=X':
-                    operand = line[16:35].strip()
-                    symbol_table[opcode] = hex(int(loc_ctr)).format(int(loc_ctr))
-                    loc_ctr += (len(operand) - 4)/2;
-                elif opcode[0:2] == '=C':
-                    operand = line[16:35].strip()
-                    symbol_table[opcode] = hex(int(loc_ctr)).format(int(loc_ctr))
-                    loc_ctr += (len(operand) - 4);
-                else:
-                    #set error flag
-                    print("Invalid operation code")
-                    break
-
-    #write line to intermediate file 
-    intermid_file.write(str(hex(int(loc_ctr)).format(int(loc_ctr)))+" "+line)
-
+                        loc_ctr += (len(operand) - 3)
+            #write line to intemediate file
+            print(hex(loc_ctr)[2:] +""+ line)
+            intermid_file.write(hex(loc_ctr)[2:] +"  "+ line)
 
 #save (loc_ctr - starting add ) as program length
 prog_leng = int(loc_ctr) - int(start_add)
 
-
 #close file
 sic_source_file.close()
 opcode_table_file.close()
+intermid_file.close()
 
 print("name of the program: ",prog_name)
 print("length of the program: ",hex(int(prog_leng)).format(int(prog_leng)))
