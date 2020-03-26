@@ -3,7 +3,6 @@
 2. LOCCTR, PRGLTH, PRGNAME, ...
 3. Intermediate file (.mdt): Stored on the secondary storage. 
 4.Your assembler can stop execution if there are errors in Pass 1"""
-import codecs
 
 #open file to read it
 sic_source_file = open("source.txt", "r")
@@ -33,7 +32,7 @@ comment = ""
 counter = 0
 
 #create a .text files  
-intermid_file = open("intermid.mdt","a+")
+intermid_file = open("intermid.mdt","w+")
 
 #initialize a list of directives
 directives = ["START", "END", "BYTE", "WORD", "RESB", "RESW", "BASE", "LTORG"]
@@ -59,12 +58,16 @@ if first_line[9:15].strip() == "START":
 else:
     loc_ctr = 0
 
+
 for ind, line in enumerate(sic_assembly):
     #read opcode
     opcode = line[9:15].strip()
     if opcode != "END" and opcode != "START" and opcode != "BASE":
         #if this is not a comment line
         if line[0] != '.':
+            #write line to intemediate file
+            blanks = 6-len(str((loc_ctr)))
+            intermid_file.write(hex(loc_ctr)[2:]+" "*blanks+ line)
             #read label field
             label = line[0:8].strip()
 
@@ -89,7 +92,6 @@ for ind, line in enumerate(sic_assembly):
                 found = 1
                 #add 3 {instruction length} to LOCCTR
                 loc_ctr += 3
-
             if found == 0 and opcode in directives:
                 if opcode == "WORD":
                     #add 3 {instruction length}
@@ -107,10 +109,6 @@ for ind, line in enumerate(sic_assembly):
                         loc_ctr += int((len(operand) - 3)/2)
                     elif operand[0] == 'C':
                         loc_ctr += (len(operand) - 3)
-            #write line to intemediate file
-            print(hex(loc_ctr)[2:] +""+ line)
-            intermid_file.write(hex(loc_ctr)[2:] +"  "+ line)
-
 #save (loc_ctr - starting add ) as program length
 prog_leng = int(loc_ctr) - int(start_add)
 
@@ -119,7 +117,8 @@ sic_source_file.close()
 opcode_table_file.close()
 intermid_file.close()
 
-print("name of the program: ",prog_name)
+""" print("name of the program: ",prog_name)
 print("length of the program: ",hex(int(prog_leng)).format(int(prog_leng)))
 print("LOCCTR: ",hex(int(loc_ctr)).format(int(loc_ctr)))
 print("symbol table : ",symbol_table)
+"""

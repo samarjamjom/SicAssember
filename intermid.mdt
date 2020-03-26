@@ -1,67 +1,34 @@
 1000  COPY     START  1000 
-1003  FIRST    STL    RETADR            SAVE RETURN ADDRESS       
-1006  CLOOP    JSUB   RDREC
-1009           LDA    LENGTH            TEST FOR EOF
-100c           COMP   ZERO
-100f           JEQ    ENDFIL
-1012           JSUB   WRREC
-1015           J      CLOOP
-1018  ENDFIL   LDA    EOF
-101b           STA    BUFFER
-101e           LDA    THREE8
-1021           STA    LENGTH
-1024           JSUB   WRREC
-1027           LDL    RETADR
-102a           RSUB
-102d  EOF      BYTE   C'EOF'
-1030  THREE    WORD   3
-1033  ZERO     WORD   0
-1036  RETADR   RESW   1
-1039  LENGTH   RESW   1
-2039  BUFFER   RESB   4096
-203c  RDREC    LDX    ZERO
-203f           LDA    ZERO
-2042  RLOOP    TD     INPUT
-2045           JEQ    RLOOP
-2048           RD     INPUT
-204b           COMP   ZERO
-204e           JEQ    EXIT
-2051           STCH   BUFFER,X
-2054           TIX    MAXLEN
-2057           JLT    RLOOP
-205a  EXIT     STX    LENGTH
-205d           RSUB
-205e  INPUT    BYTE   X'F1'1000  COPY     START  1000 
-1003  FIRST    STL    RETADR            SAVE RETURN ADDRESS       
-1006  CLOOP    JSUB   RDREC
-1009           LDA    LENGTH            TEST FOR EOF
-100c           COMP   ZERO
-100f           JEQ    ENDFIL
-1012           JSUB   WRREC
-1015           J      CLOOP
-1018  ENDFIL   LDA    EOF
-101b           STA    BUFFER
-101e           LDA    THREE8
-1021           STA    LENGTH
-1024           JSUB   WRREC
-1027           LDL    RETADR
-102a           RSUB
-102d  EOF      BYTE   C'EOF'
-1030  THREE    WORD   3
-1033  ZERO     WORD   0
-1036  RETADR   RESW   1
-1039  LENGTH   RESW   1
-2039  BUFFER   RESB   4096
-203c  RDREC    LDX    ZERO
-203f           LDA    ZERO
-2042  RLOOP    TD     INPUT
-2045           JEQ    RLOOP
-2048           RD     INPUT
-204b           COMP   ZERO
-204e           JEQ    EXIT
-2051           STCH   BUFFER,X
-2054           TIX    MAXLEN
-2057           JLT    RLOOP
-205a  EXIT     STX    LENGTH
-205d           RSUB
-205e  INPUT    BYTE   X'F1'
+1000  FIRST    STL    RETADR            SAVE RETURN ADDRESS       
+1003  CLOOP    JSUB   RDREC
+1006           LDA    LENGTH            TEST FOR EOF
+1009           COMP   ZERO
+100c           JEQ    ENDFIL
+100f           JSUB   WRREC
+1012           J      CLOOP
+1015  ENDFIL   LDA    EOF
+1018           STA    BUFFER
+101b           LDA    THREE8
+101e           STA    LENGTH
+1021           JSUB   WRREC
+1024           LDL    RETADR
+1027           RSUB
+102a  EOF      BYTE   C'EOF'
+102d  THREE    WORD   3
+1030  ZERO     WORD   0
+1033  RETADR   RESW   1
+1036  LENGTH   RESW   1
+1039  BUFFER   RESB   4096
+2039  RDREC    LDX    ZERO
+203c           LDA    ZERO
+203f  RLOOP    TD     INPUT
+2042           JEQ    RLOOP
+2045           RD     INPUT
+2048           COMP   ZERO
+204b           JEQ    EXIT
+204e           STCH   BUFFER,X
+2051           TIX    MAXLEN
+2054           JLT    RLOOP
+2057  EXIT     STX    LENGTH
+205a           RSUB
+205d  INPUT    BYTE   X'F1'
