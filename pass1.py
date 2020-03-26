@@ -4,6 +4,8 @@
 3. Intermediate file (.mdt): Stored on the secondary storage. 
 4.Your assembler can stop execution if there are errors in Pass 1"""
 
+import codecs
+
 #open file to read it
 sic_source_file = open("source.txt", "r")
 
@@ -20,6 +22,7 @@ opcode_table = opcode_table_file.readlines()
 #initialize symbol table, program name, program length and locctr
 symbol_table = {}
 opt_table = {}
+literal_table = {}
 prog_name = ""
 prog_leng = 0
 start_add = 0
@@ -31,8 +34,9 @@ operand = 0
 comment = ""
 counter = 0
 
+
 #create a .text files  
-intermid_file = open("intermid.mdt","a+")
+intermid_file = open("intermid.mdt","w+")
 
 #initialize a list of directives
 directives = ["START", "END", "BYTE", "WORD", "RESB", "RESW", "BASE", "LTORG"]
@@ -50,8 +54,10 @@ if first_line[9:15].strip() == "START":
     prog_name =  first_line[0:8].strip()
     start_add = int(first_line[16:35].strip(),16)
     loc_ctr = start_add
+
     #to save a fixed format for intermediate file 
     blanks = 6-len(str((loc_ctr)))
+
     #write line to intemediate file
     intermid_file.write(hex(loc_ctr)[2:]+" "*blanks+first_line)
     
@@ -59,14 +65,17 @@ else:
     loc_ctr = 0
 
 for ind, line in enumerate(sic_assembly):
+   
     #read opcode
     opcode = line[9:15].strip()
     if opcode != "END" and opcode != "START" and opcode != "BASE":
         #if this is not a comment line
         if line[0] != '.':
+            #write line to intemediate file
+            blanks = 6-len(str((loc_ctr)))
+            intermid_file.write(hex(loc_ctr)[2:]+" "*blanks+line)
             #read label field
             label = line[0:8].strip()
-
             #if there is asymbol in label field
             if label != "":
                 #serch SYMTAB for LABEL
@@ -106,10 +115,30 @@ for ind, line in enumerate(sic_assembly):
                         loc_ctr += int((len(operand) - 3)/2)
                     elif operand[0] == 'C':
                         loc_ctr += (len(operand) - 3)
-            #write line to intemediate file
-            print(hex(loc_ctr)[2:] +""+ line)
-            intermid_file.write(hex(loc_ctr)[2:] +"  "+ line)
+        
+        #check if line contain literal
+        if line[16:17] == '=':
+            literalList = []
+            isExist = 1
+            literal = line[17:35].strip()
+            if literal[0]=='C':
+                hexCode = literal[2:-1].encode("utf-8").hex()
+            elif literal[0]== 'X':
+                hexCode = literal[2:-1]
+            else:
+                #set error flag
+                print("invalid literals")
+            #find literal in table literal
+            if literal in literal_table or literal_table[literal][0] == hexCode:
+                isExist = 0
+            
+            #if literal not exist in literal tabel 
+            if isExist:
+                literalList.append(hexCode,len(hexCode)/3)
+                literal_table[literal].append(literalList)
 
+
+         
 #save (loc_ctr - starting add ) as program length
 prog_leng = int(loc_ctr) - int(start_add)
 
@@ -118,7 +147,7 @@ sic_source_file.close()
 opcode_table_file.close()
 intermid_file.close()
 
-print("name of the program: ",prog_name)
-print("length of the program: ",hex(int(prog_leng)).format(int(prog_leng)))
-print("LOCCTR: ",hex(int(loc_ctr)).format(int(loc_ctr)))
-print("symbol table : ",symbol_table)
+# print("name of the program: ",prog_name)
+# print("length of the program: ",hex(int(prog_leng))[2:].format(int(prog_leng)))
+# print("LOCCTR: ",hex(int(loc_ctr))[2:].format(int(loc_ctr)))
+# print("symbol table : ",symbol_table)
