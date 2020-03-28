@@ -4,65 +4,11 @@
 3. Intermediate file (.mdt): Stored on the secondary storage. 
 4.Your assembler can stop execution if there are errors in Pass 1"""
 
-import codecs
+import guiForm
 from tkinter import messagebox
-import tkinter.filedialog as filedialog
 import tkinter as tk
-import os
 
-master = tk.Tk()
-source_code = ""
-intermid_file = "intermid"
-def input():
-    global source_code
-    input_path = tk.filedialog.askopenfilename()
-    input_entry.delete(1, tk.END)  # Remove current text in entry
-    input_entry.insert(0, input_path)  # Insert the 'path'
-    source_code = os.path.basename(input_path)
-
-def output():
-    path = tk.filedialog.askopenfilename()
-    input_entry.delete(1, tk.END)  # Remove current text in entry
-    input_entry.insert(0, path)  # Insert the 'path'
-
-top_frame = tk.Frame(master)
-bottom_frame = tk.Frame(master)
-master.title("SIC Assembler")
-line = tk.Frame(master, height=1, width=400, bg="grey80", relief='groove')
-
-
-input_path = tk.Label(top_frame, text="Input File Path:")
-input_entry = tk.Entry(top_frame, text="", width=40)
-browse1 = tk.Button(top_frame, text="Browse", command=input)
-
-# outputfile = tk.StringVar()
-# output_path = tk.Label(bottom_frame,textvariable=outputfile, text="Output File Name:")
-# output_entry = tk.Entry(bottom_frame, text="", width=40)
-# print(output_entry.get())
-# global intermidfile 
-# intermidfile = output_entry.get()
-# print(intermid_file)
-# browse2 = tk.Button(bottom_frame, text="Browse", command=output)
-
-begin_button = tk.Button(bottom_frame, text='Begin!', command= master.destroy)
-
-top_frame.pack(side=tk.TOP)
-line.pack(pady=10)
-bottom_frame.pack(side=tk.BOTTOM)
-
-input_path.pack(pady=5)
-input_entry.pack(pady=5)
-browse1.pack(pady=5)
-
-# output_path.pack(pady=5)
-# output_entry.pack(pady=5)
-# browse2.pack(pady=5)
-
-begin_button.pack(pady=20, fill=tk.X)
-
-master.mainloop()
-# intermidfile = output_entry.get()
-# print(intermid_file)
+source_code,intermid_file = guiForm.gui_fun()
 
 #open file to read it
 sic_source_file = open(source_code, "r")
@@ -131,6 +77,8 @@ for ind, line in enumerate(sic_assembly):
 
         #if this is not a comment line
         if line[0] != '.':
+            if line[35:] != "":
+                line = line[:34]+"\n"
             #write line to intemediate file
             #check if that line is LTORG
             if(opcode == "LTORG"):
@@ -164,11 +112,10 @@ for ind, line in enumerate(sic_assembly):
             #search OPTAB for OPCODE
             #if found
             if opcode in opt_table:
-                found = 1
                 #add 3 {instruction length} to LOCCTR
                 loc_ctr += 3
             #if not found
-            if found == 0 and opcode in directives:
+            else:
                 if opcode == "WORD":
                     #add 3 {instruction length}
                     loc_ctr += 3
@@ -193,14 +140,14 @@ for ind, line in enumerate(sic_assembly):
                         intermid_file.write(hex(loc_ctr)[2:]+" "*blanks+"*"+" "*7+"="+key+"\n")
                         loc_ctr += int(literal_table[key][1])
                     literal_table = {}
-            else:
-                #set error flag
-                error_flag = 1
-                print("ERROR, Invalid operation code")
-                # message box display
-                messagebox.showerror("invalid operation code","Please enter valid operation code\n" \
-                                "\n\nError MSG: {0}")
-                break
+                else:
+                    #set error flag
+                    error_flag = 1
+                    print("ERROR, Invalid operation code")
+                    # message box display
+                    messagebox.showerror("invalid operation code","Please enter valid operation code\n" \
+                                    "\n\nError MSG: {0}")
+                    break
                     
             #check if line contain literal
             if line[16:17] == '=':
@@ -219,7 +166,6 @@ for ind, line in enumerate(sic_assembly):
                     messagebox.showerror("invalid literals","Please enter valid literal\n" \
                                 "E.g.: =C'' or =X''"
                                 "\n\nError MSG: {0}")
-                    
                 #find literal in table literal
 
                 if literal in literal_tab:
@@ -251,9 +197,11 @@ opcode_table_file.close()
 intermid_file.close()
 
 if error_flag != 1:
+    pl = hex(int(prog_leng))[2:].format(int(prog_leng))
+    lc = hex(int(loc_ctr))[2:].format(int(loc_ctr))
     print("name of the program: ",prog_name)
-    print("length of the program: ",hex(int(prog_leng))[2:].format(int(prog_leng)))
-    print("LOCCTR: ",hex(int(loc_ctr))[2:].format(int(loc_ctr)))
+    print("length of the program: ",pl)
+    print("LOCCTR: ",lc)
     print("symbol table : ",symbol_table)
     print("literal table : ",literal_tab)
 
@@ -272,7 +220,7 @@ if error_flag != 1:
 
     programName = tk.Text(root, height=60, width=80)
     programName.pack()
-    quote = "program name: "+prog_name+"\n\nLocation counter: "+str(loc_ctr)+"\n\nthe length of the program: "+str(prog_leng)+"\n\nSYMTAB: "+SymbolTable+"\n\nLITTAB: "+literalTable
+    quote = "program name: "+prog_name+"\n\nLocation counter: "+lc+"\n\nthe length of the program: "+pl+"\n\nSYMTAB: "+SymbolTable+"\n\nLITTAB: "+literalTable
     programName.insert(tk.END, quote)
 
     root.mainloop()

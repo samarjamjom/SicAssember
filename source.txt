@@ -1,4 +1,4 @@
-COPY     START  1000 
+COPY     START  1000
 FIRST    STL    RETADR            SAVE RETURN ADDRESS       
 CLOOP    JSUB   RDREC
          LDA    LENGTH            TEST FOR EOF
@@ -23,7 +23,9 @@ LENGTH   RESW   1
 BUFFER   RESB   4096
 .      SUBROUTINE TO READ RECORD INTO BUFFER
 RDREC    LDX    ZERO
+         LDA    =X'F3'
          LDA    ZERO
+         LTORG
          LDA    =X'F2'
 RLOOP    TD     INPUT
          JEQ    RLOOP
