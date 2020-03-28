@@ -6,13 +6,15 @@ CLOOP    JSUB   RDREC
          JEQ    ENDFIL
          JSUB   WRREC
          J      CLOOP
-ENDFIL   LDA    EOF
+ENDFIL   LDA    =C'EOF'
+         LDA    =X'F1'
          STA    BUFFER
          LDA    THREE8
          STA    LENGTH
          JSUB   WRREC
          LDL    RETADR
          RSUB
+         LTORG
 EOF      BYTE   C'EOF'
 THREE    WORD   3
 ZERO     WORD   0
@@ -22,6 +24,7 @@ BUFFER   RESB   4096
 .      SUBROUTINE TO READ RECORD INTO BUFFER
 RDREC    LDX    ZERO
          LDA    ZERO
+         LDA    =X'F2'
 RLOOP    TD     INPUT
          JEQ    RLOOP
          RD     INPUT
@@ -32,4 +35,4 @@ RLOOP    TD     INPUT
          JLT    RLOOP
 EXIT     STX    LENGTH
          RSUB
-INPUT    BYTE   X'F1'
+         END    FIRST
