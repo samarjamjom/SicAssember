@@ -113,8 +113,8 @@ text2.tag_configure('color',
                     foreground='#476042',
                     font=('Tempus Sans ITC', 12, 'bold'))
 text2.tag_bind('follow',
-            '<1>',
-            lambda e, t=text2: t.insert(tk.END, "Not now, maybe later!"))
+               '<1>',
+               lambda e, t=text2: t.insert(tk.END, "Not now, maybe later!"))
 text2.insert(tk.END,'\nWilliam Shakespeare\n', 'big')
 quote = """
 To be, or not to be that is the question:
@@ -144,7 +144,7 @@ root.mainloop()
 # length.pack()
 # quote = "\nthe length of the program: "+str(prog_leng)
 # length.insert(tk.END, quote)
- 
+
 # text2 = tk.Text(root, height=50, width=40)
 # scroll = tk.Scrollbar(root, command=text2.yview)
 # text2.configure(yscrollcommand=scroll.set)

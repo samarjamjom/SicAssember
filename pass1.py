@@ -40,7 +40,6 @@ operand = 0
 comment = ""
 counter = 0
 
-
 #create a .text files  
 intermid_file = open(intermid_file+".mdt","w+")
 

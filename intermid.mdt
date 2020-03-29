@@ -1,4 +1,4 @@
-1000  COPY     START  1000
+1000  COPY     START  1000 
 1000  FIRST    STL    RETADR            
 1003  CLOOP    JSUB   RDREC
 1006           LDA    LENGTH            
@@ -24,20 +24,17 @@
 103d  LENGTH   RESW   1
 1040  BUFFER   RESB   4096
 2040  RDREC    LDX    ZERO
-2043           LDA    =X'F3'
-2046           LDA    ZERO
-               LTORG
-2049  *       =X'F3'
-204a           LDA    =X'F2'
-204d  RLOOP    TD     INPUT
-2050           JEQ    RLOOP
-2053           RD     INPUT
-2056           COMP   ZERO
-2059           JEQ    EXIT
-205c           STCH   BUFFER,X
-205f           TIX    MAXLEN
-2062           JLT    RLOOP
-2065  EXIT     STX    LENGTH
-2068           RSUB
+2043           LDA    ZERO
+2046           LDA    =X'F2'
+2049  RLOOP    TD     INPUT
+204c           JEQ    RLOOP
+204f           RD     INPUT
+2052           COMP   ZERO
+2055           JEQ    EXIT
+2058           STCH   BUFFER,X
+205b           TIX    MAXLEN
+205e           JLT    RLOOP
+2061  EXIT     STX    LENGTH
+2064           RSUB
                END    FIRST
-206b  *       =X'F2'
+2067  *       =X'F2'
